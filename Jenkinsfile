@@ -29,8 +29,8 @@ pipeline {
             }
             steps {
                 sh '''
+                echo "--------TEST STAGE-----------"
                 test -f build/index.html
-                echo "I'm hereeeeeeeeee"
                 npm test
                 '''
             }

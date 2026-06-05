@@ -36,8 +36,9 @@ pipeline {
             }
         }
     }
-    post{
-        always{
+    post {
+        always {
+            echo 'Pipeline completed'
             junit 'test-results/junit.xml'
         }
     }

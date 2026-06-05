@@ -20,5 +20,12 @@ pipeline {
                 '''
             }
         }
+        stage('Test'){
+            steps{
+                sh '''
+                echo "I'm hereeeeeeeeee"
+                '''
+            }
+        }
     }
 }

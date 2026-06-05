@@ -24,6 +24,7 @@ pipeline {
             steps{
                 sh '''
                 echo "I'm hereeeeeeeeee"
+                npm test
                 '''
             }
         }

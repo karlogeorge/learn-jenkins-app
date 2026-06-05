@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Build') {
+            // This is a comment
+            /*
+            This is also a comment
+            */
             agent {
                     docker {
                         image  'node:18-alpine'
@@ -36,10 +40,26 @@ pipeline {
                 '''
             }
         }
+        stage('E2E') {
+            agent {
+                    docker {
+                        image 'docker pull mcr.microsoft.com/playwright:v1.60.0-noble'
+                        reuseNode true
+                    }
+            }
+            steps {
+                sh '''
+                echo "-------------Starting E2E-----------------"
+                npm install -g serve
+                npx playwright test
+                echo "-------------END OF E2E-----------------"
+                '''
+            }
+        }
     }
     post {
         always {
-            echo '"-----------------Pipeline completed"-----------------'
+            echo '"-----------------Pipeline completed-----------------'
             junit 'test-results/junit.xml'
         }
     }

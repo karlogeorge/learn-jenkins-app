@@ -15,12 +15,14 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo "-----------------BUILD START-----------------"
                     ls -la
                     node --version
                     npm --version
                     npm ci
                     npm run build
                     ls -la
+                    echo "-----------------TEST COMPLETED-----------------"
                 '''
             }
         }
@@ -33,7 +35,7 @@ pipeline {
             }
             steps {
                 sh '''
-                echo "--------TEST STAGE-----------"
+                echo "-----------------TEST START-----------------"
                 test -f build/index.html
                 npm test
                 echo "-----------------TEST COMPLETED SUCCESSFULLY--------------"
@@ -49,10 +51,10 @@ pipeline {
             }
             steps {
                 sh '''
-                echo "-------------Starting E2E-----------------"
+                echo "-------------E2E START-----------------"
                 npm install -g serve
                 npx playwright test
-                echo "-------------END OF E2E-----------------"
+                echo "-------------E2E COMPLETE-----------------"
                 '''
             }
         }

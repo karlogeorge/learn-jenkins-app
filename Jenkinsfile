@@ -52,7 +52,8 @@ pipeline {
             steps {
                 sh '''
                 echo "-------------E2E START-----------------"
-                npm install -g serve
+                npm install serve
+                node_modules/.bin/serve
                 npx playwright test
                 echo "-------------E2E COMPLETE-----------------"
                 '''

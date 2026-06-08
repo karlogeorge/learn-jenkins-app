@@ -27,7 +27,7 @@ pipeline {
         //     }
         // }
 
-        stage('Unit Tests') {
+        stage('TESTS') {
             parallel {
                 stage('Unit Test') {
                     agent {
@@ -43,6 +43,13 @@ pipeline {
                             npm test
                             echo "-----------------TEST COMPLETED SUCCESSFULLY--------------"
                         '''
+                    }
+
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                            echo '"-----------------Pipeline TEST completed-----------------'
+                        }
                     }
                 }
 
@@ -65,27 +72,25 @@ pipeline {
                             echo "-------------E2E COMPLETE-----------------"
                         '''
                     }
+
+                    post {
+                        always {
+                            publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            icon: '',
+                            keepAll: false,
+                            reportDir: 'playwright-report',
+                            reportFiles: 'index.html',
+                            reportName: 'Playwright HTML Report',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                            ])
+                            echo '"-----------------Pipeline E2E completed-----------------'
+                        }
+                    }
                 }
             }
         }
-    }
-    post {
-            always {
-                junit 'jest-results/junit.xml'
-
-                publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                icon: '',
-                keepAll: false,
-                reportDir: 'playwright-report',
-                reportFiles: 'index.html',
-                reportName: 'Playwright HTML Report',
-                reportTitles: '',
-                useWrapperFileDirectly: true
-            ])
-
-                echo '"-----------------Pipeline completed-----------------'
-            }
     }
 }

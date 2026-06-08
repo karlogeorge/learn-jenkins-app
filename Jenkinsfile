@@ -53,6 +53,8 @@ pipeline {
                 sh '''
                 echo "-------------E2E START-----------------"
                 npm install serve
+
+                # This will start this command in background
                 node_modules/.bin/serve -s build &
                 sleep 15
                 npx playwright test --reporter=html
@@ -63,8 +65,18 @@ pipeline {
     }
     post {
         always {
-            echo '"-----------------Pipeline completed-----------------'
             junit 'jest-results/junit.xml'
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                icon: '',
+                keepAll: false,
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright HTML Report',
+                reportTitles: '',
+                useWrapperFileDirectly: true])
+            echo '"-----------------Pipeline completed-----------------'
         }
     }
 }

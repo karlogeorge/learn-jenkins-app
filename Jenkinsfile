@@ -57,7 +57,7 @@ pipeline {
                 # This will start this command in background
                 node_modules/.bin/serve -s build &
                 sleep 15
-                npx playwright test
+                npx playwright test --reporter=html
                 echo "-------------E2E COMPLETE-----------------"
                 '''
             }

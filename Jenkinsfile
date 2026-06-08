@@ -2,6 +2,31 @@ pipeline {
     agent any
 
     stages {
+        stage('Build') {
+            // This is a comment
+            /*
+            This is also a comment
+            */
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "-----------------BUILD START-----------------"
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                    echo "-----------------TEST COMPLETED-----------------"
+                '''
+            }
+        }
+
         stage('Unit Tests') {
             parallel {
                 stage('Unit Test') {
@@ -43,32 +68,6 @@ pipeline {
                 }
             }
         }
-
-    //     stage('Build') {
-    //         // This is a comment
-    //         /*
-    //         This is also a comment
-    //         */
-    //         agent {
-    //             docker {
-    //                 image 'node:18-alpine'
-    //                 reuseNode true
-    //             }
-    //         }
-    //         steps {
-    //             sh '''
-    //                 echo "-----------------BUILD START-----------------"
-    //                 ls -la
-    //                 node --version
-    //                 npm --version
-    //                 npm ci
-    //                 npm run build
-    //                 ls -la
-    //                 echo "-----------------TEST COMPLETED-----------------"
-    //             '''
-    //         }
-    // // }
-    // }
 
         post {
             always {

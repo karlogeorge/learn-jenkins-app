@@ -53,8 +53,6 @@ pipeline {
                 sh '''
                 echo "-------------E2E START-----------------"
                 npm install serve
-
-                # This will start this command in background
                 node_modules/.bin/serve -s build &
                 sleep 15
                 npx playwright test --reporter=html

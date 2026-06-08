@@ -68,8 +68,8 @@ pipeline {
                 }
             }
         }
-
-        post {
+    }
+    post {
             always {
                 junit 'jest-results/junit.xml'
 
@@ -87,6 +87,5 @@ pipeline {
 
                 echo '"-----------------Pipeline completed-----------------'
             }
-        }
     }
 }

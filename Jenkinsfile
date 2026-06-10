@@ -108,11 +108,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "-----------------------DEPLOY START---------------------"
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
                     node_modules/.bin/netlify status
+                    echo "-----------------------DEPLOY START---------------------"
+                    node_modules/.bin/netlify deploy --dir=build --prod
                     echo "----------------------DEPLOY COMPLETED------------------"
                 '''
             }

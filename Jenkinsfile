@@ -94,10 +94,6 @@ pipeline {
         }
 
         stage('Deploy') {
-            // This is a comment
-            /*
-            This is also a comment
-            */
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -107,8 +103,8 @@ pipeline {
             steps {
                 sh '''
                     echo "-----------------DEPLOY START-----------------"
-                    npm install netlify-cli -g
-                    netlify --version
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
                     echo "-----------------DEPLOY COMPLETED-----------------"
                 '''
             }

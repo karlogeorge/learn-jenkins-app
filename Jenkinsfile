@@ -113,7 +113,7 @@ pipeline {
                     echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
                     node_modules/.bin/netlify status
                     echo "-----------------------DEPLOY START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --prod
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     echo "----------------------DEPLOY COMPLETED------------------"
                 '''
             }

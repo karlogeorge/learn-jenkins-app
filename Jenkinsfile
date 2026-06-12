@@ -115,6 +115,7 @@ pipeline {
                     echo "-----------------------DEPLOY START---------------------"
                     node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     echo "----------------------DEPLOY COMPLETED------------------"
+                    
                 '''
             }
         }

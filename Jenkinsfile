@@ -88,7 +88,7 @@ pipeline {
                             keepAll: false,
                             reportDir: 'playwright-report',
                             reportFiles: 'index.html',
-                            reportName: 'Playwright HTML Report',
+                            reportName: 'Playwright E2E Local',
                             reportTitles: '',
                             useWrapperFileDirectly: true
                             ])
@@ -115,8 +115,40 @@ pipeline {
                     echo "-----------------------DEPLOY START---------------------"
                     node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     echo "----------------------DEPLOY COMPLETED------------------"
-                    
+
                 '''
+            }
+        }
+        stage('PROD - E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.60.0-noble'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "-------------PROD E2E START-----------------"
+                    npx playwright test --reporter=html
+                    echo "-------------PROD E2E COMPLETE-----------------"
+                '''
+            }
+
+            post {
+                always {
+                    publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    icon: '',
+                    keepAll: false,
+                    reportDir: 'playwright-report',
+                    reportFiles: 'index.html',
+                    reportName: 'Playwright E2E Prod',
+                    reportTitles: '',
+                    useWrapperFileDirectly: true
+                    ])
+                    echo '"-----------------PROD Pipeline E2E completed-----------------'
+                }
             }
         }
     }

@@ -126,6 +126,10 @@ pipeline {
                     reuseNode true
                 }
             }
+
+            environment {
+                CI_ENVIRONMENT_URL = 'https://vocal-sorbet-197979.netlify.app/'
+            }
             steps {
                 sh '''
                     echo "-------------PROD E2E START-----------------"

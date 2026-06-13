@@ -128,9 +128,11 @@ pipeline {
                 }
             }
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    sh '''
-                    input message: 'Ready to Deploy ?', ok: 'Yes, I am ready to deploy.'
+                timeout(time: 1, unit: 'HOURS') {
+                    input message: 'Ready to Deploy ?',
+                    ok: 'Yes, I am ready to deploy.'
+                }
+                sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
@@ -138,8 +140,8 @@ pipeline {
                     echo "-----------------------DEPLOY START---------------------"
                     node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     echo "----------------------DEPLOY COMPLETED------------------"
+
                 '''
-                }
             }
         }
         stage('PROD - E2E') {

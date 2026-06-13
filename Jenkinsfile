@@ -120,6 +120,14 @@ pipeline {
             }
         }
 
+        stage('Approval') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    input message: 'Ready to Deploy to PROD ?',
+                    ok: 'Yes, I am ready to deploy.'
+                }
+            }
+        }
         stage('Deploy PROD') {
             agent {
                 docker {
@@ -128,10 +136,6 @@ pipeline {
                 }
             }
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    input message: 'Ready to Deploy ?',
-                    ok: 'Yes, I am ready to deploy.'
-                }
                 sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version

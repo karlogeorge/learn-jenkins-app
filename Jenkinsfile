@@ -108,12 +108,13 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli
+                    npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
                     echo "---------Deploying to Staging : $NETLIFY_SITE_ID --------"
                     node_modules/.bin/netlify status
                     echo "-----------------------DEPLOY Staging START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --no-build
+                    node_modules/.bin/netlify deploy --dir=build --no-build --json >> deploy-output.json
+                    node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
                     echo "----------------------DEPLOY Staging COMPLETED------------------"
 
                 '''
@@ -122,7 +123,7 @@ pipeline {
 
         stage('Approval') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
+                timeout(time: 15, unit: 'MINUTES') {
                     input message: 'Ready to Deploy to PROD ?',
                     ok: 'Yes, I am ready to deploy.'
                 }

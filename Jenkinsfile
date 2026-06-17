@@ -99,48 +99,44 @@ pipeline {
             }
         }
 
-        stage('Deploy staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
-                    echo "---------Deploying to Staging : $NETLIFY_SITE_ID --------"
-                    node_modules/.bin/netlify status
-                    echo "-----------------------DEPLOY Staging START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
+        // stage('Deploy staging') {
+        //     agent {
+        //         docker {
+        //             image 'node:18-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh '''
 
-                    echo "----------------------DEPLOY Staging COMPLETED------------------"
+        //             echo "----------------------DEPLOY Staging COMPLETED------------------"
 
-                '''
-                script {
-                    env.STAGING_URL = sh(
-                    script:"node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json",
-                    returnStdout: true)
-                }
-            }
-        }
-        stage('Staging - E2E') {
+        //         '''
+        //         script {
+        //             env.STAGING_URL = sh(
+        //             script:"",
+        //             returnStdout: true)
+        //         }
+        //     }
+        // }
+        stage('Deploy Staging') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.60.0-noble'
                     reuseNode true
                 }
             }
-
-            environment {
-                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-            }
             steps {
                 sh '''
-                    echo "-------------Staging E2E START-----------------"
+                    echo "-------------Staging Deploy START-----------------"
+                    npm install netlify-cli node-jq
+                    node_modules/.bin/netlify --version
+                    echo "---------Deploying to Staging : $NETLIFY_SITE_ID --------"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
+                    CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
                     npx playwright test --reporter=html
-                    echo "-------------Staging E2E COMPLETE-----------------"
+                    echo "-------------Staging Deploy COMPLETE-----------------"
                 '''
             }
 
@@ -169,26 +165,6 @@ pipeline {
                 }
             }
         }
-        // stage('Deploy PROD') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             npm install netlify-cli
-        //             node_modules/.bin/netlify --version
-        //             echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
-        //             node_modules/.bin/netlify status
-        //             echo "-----------------------DEPLOY START---------------------"
-        //             node_modules/.bin/netlify deploy --dir=build --prod --no-build
-        //             echo "----------------------DEPLOY COMPLETED------------------"
-
-        //         '''
-        //     }
-        // }
         stage('Deploy PROD') {
             agent {
                 docker {
@@ -209,7 +185,7 @@ pipeline {
                     echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
                     node_modules/.bin/netlify status
                     echo "-----------------------DEPLOY START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --prod --no-build 
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     echo "----------------------DEPLOY COMPLETED------------------"
                     npx playwright test --reporter=html
                     echo "-------------PROD E2E COMPLETE-----------------"

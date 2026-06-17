@@ -118,11 +118,11 @@ pipeline {
                     echo "----------------------DEPLOY Staging COMPLETED------------------"
 
                 '''
-            }
-            script {
-                env.STAGING_URL =
-                sh(script:"node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json",
-                returntStdout: true)
+                script {
+                    env.STAGING_URL =
+                    sh(script:"node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json",
+                    returntStdout: true)
+                }
             }
         }
         stage('Staging - E2E') {

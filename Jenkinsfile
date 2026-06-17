@@ -169,27 +169,27 @@ pipeline {
                 }
             }
         }
-        stage('Deploy PROD') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
-                    node_modules/.bin/netlify status
-                    echo "-----------------------DEPLOY START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
-                    echo "----------------------DEPLOY COMPLETED------------------"
+        // stage('Deploy PROD') {
+        //     agent {
+        //         docker {
+        //             image 'node:18-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh '''
+        //             npm install netlify-cli
+        //             node_modules/.bin/netlify --version
+        //             echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
+        //             node_modules/.bin/netlify status
+        //             echo "-----------------------DEPLOY START---------------------"
+        //             node_modules/.bin/netlify deploy --dir=build --prod --no-build
+        //             echo "----------------------DEPLOY COMPLETED------------------"
 
-                '''
-            }
-        }
-        stage('PROD - E2E') {
+        //         '''
+        //     }
+        // }
+        stage('Deploy PROD') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.60.0-noble'
@@ -203,6 +203,14 @@ pipeline {
             steps {
                 sh '''
                     echo "-------------PROD E2E START-----------------"
+                    node --version
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
+                    node_modules/.bin/netlify status
+                    echo "-----------------------DEPLOY START---------------------"
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build 
+                    echo "----------------------DEPLOY COMPLETED------------------"
                     npx playwright test --reporter=html
                     echo "-------------PROD E2E COMPLETE-----------------"
                 '''

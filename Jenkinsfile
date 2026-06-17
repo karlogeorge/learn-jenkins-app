@@ -91,7 +91,7 @@ pipeline {
                             reportFiles: 'index.html',
                             reportName: 'Playwright E2E Local',
                             reportTitles: '',
-                            useWrapperFileDirectly: true
+                            useWrapperFileDirectly: false
                             ])
                             echo '"-----------------Pipeline E2E completed-----------------'
                         }
@@ -135,7 +135,7 @@ pipeline {
                     reportFiles: 'index.html',
                     reportName: 'Staging E2E',
                     reportTitles: '',
-                    useWrapperFileDirectly: true
+                    useWrapperFileDirectly: false
                     ])
                     echo '"-----------------Staging Pipeline E2E completed-----------------'
                 }
@@ -187,7 +187,7 @@ pipeline {
                     reportFiles: 'index.html',
                     reportName: 'Playwright E2E Prod',
                     reportTitles: '',
-                    useWrapperFileDirectly: true
+                    useWrapperFileDirectly: false
                     ])
                     echo '"-----------------PROD Pipeline E2E completed-----------------'
                 }

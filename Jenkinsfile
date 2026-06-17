@@ -109,6 +109,7 @@ pipeline {
         //     steps {
         //         sh '''
 
+
         //             echo "----------------------DEPLOY Staging COMPLETED------------------"
 
         //         '''
@@ -125,6 +126,10 @@ pipeline {
                     image 'mcr.microsoft.com/playwright:v1.60.0-noble'
                     reuseNode true
                 }
+            }
+
+            environment {
+                CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_SET'
             }
             steps {
                 sh '''
@@ -185,7 +190,7 @@ pipeline {
                     echo "---------Deploying to prod id : $NETLIFY_SITE_ID --------"
                     node_modules/.bin/netlify status
                     echo "-----------------------DEPLOY START---------------------"
-                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build 
                     echo "----------------------DEPLOY COMPLETED------------------"
                     npx playwright test --reporter=html
                     echo "-------------PROD E2E COMPLETE-----------------"
